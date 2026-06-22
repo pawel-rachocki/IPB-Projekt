@@ -1,0 +1,84 @@
+{
+  "info": {
+    "name": "IPB - Zarzadzanie Wdrozeniami (REST API)",
+    "description": "Kolekcja demonstrujaca prototypy uslug (wymog 4.5). Zmienna {{baseUrl}} domyslnie http://localhost:8080.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" }
+  ],
+  "item": [
+    {
+      "name": "Cykle wydawnicze",
+      "item": [
+        { "name": "GET wszystkie", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/release-cycles", "host": ["{{baseUrl}}"], "path": ["api", "release-cycles"] } } },
+        { "name": "GET filtr status=QA_TESTING", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/release-cycles?status=QA_TESTING", "host": ["{{baseUrl}}"], "path": ["api", "release-cycles"], "query": [{ "key": "status", "value": "QA_TESTING" }] } } },
+        { "name": "GET sort po wersji (desc)", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/release-cycles?sort=targetVersionTag,desc", "host": ["{{baseUrl}}"], "path": ["api", "release-cycles"], "query": [{ "key": "sort", "value": "targetVersionTag,desc" }] } } },
+        { "name": "GET po id", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/release-cycles/1", "host": ["{{baseUrl}}"], "path": ["api", "release-cycles", "1"] } } },
+        { "name": "POST utworz cykl", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"targetVersionTag\": \"v1.6.0\",\n  \"plannedDeploymentWindow\": \"2026-09-01T10:00:00\"\n}" }, "url": { "raw": "{{baseUrl}}/api/release-cycles", "host": ["{{baseUrl}}"], "path": ["api", "release-cycles"] } } },
+        { "name": "PATCH zmien status (zamkniecie cyklu)", "request": { "method": "PATCH", "url": { "raw": "{{baseUrl}}/api/release-cycles/1/status?value=CLOSED", "host": ["{{baseUrl}}"], "path": ["api", "release-cycles", "1", "status"], "query": [{ "key": "value", "value": "CLOSED" }] } } }
+      ]
+    },
+    {
+      "name": "Zadania (ITS)",
+      "item": [
+        { "name": "GET wszystkie", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/tickets", "host": ["{{baseUrl}}"], "path": ["api", "tickets"] } } },
+        { "name": "GET filtr status=IN_PROGRESS", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/tickets?status=IN_PROGRESS", "host": ["{{baseUrl}}"], "path": ["api", "tickets"], "query": [{ "key": "status", "value": "IN_PROGRESS" }] } } },
+        { "name": "GET filtr type=NEW_FEATURE + cykl", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/tickets?type=NEW_FEATURE&cycleId=2", "host": ["{{baseUrl}}"], "path": ["api", "tickets"], "query": [{ "key": "type", "value": "NEW_FEATURE" }, { "key": "cycleId", "value": "2" }] } } },
+        { "name": "GET sort po tytule", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/tickets?sort=title", "host": ["{{baseUrl}}"], "path": ["api", "tickets"], "query": [{ "key": "sort", "value": "title" }] } } },
+        { "name": "GET po id", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/tickets/ITS-001", "host": ["{{baseUrl}}"], "path": ["api", "tickets", "ITS-001"] } } },
+        { "name": "POST utworz zadanie", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"ticketId\": \"ITS-100\",\n  \"cycleId\": 3,\n  \"title\": \"Nowy modul raportowania\",\n  \"requirementDescription\": \"Generowanie raportow miesiecznych\",\n  \"type\": \"NEW_FEATURE\",\n  \"assigneeId\": 105\n}" }, "url": { "raw": "{{baseUrl}}/api/tickets", "host": ["{{baseUrl}}"], "path": ["api", "tickets"] } } },
+        { "name": "PATCH zmien status zadania", "request": { "method": "PATCH", "url": { "raw": "{{baseUrl}}/api/tickets/ITS-002/status?value=READY_FOR_QA", "host": ["{{baseUrl}}"], "path": ["api", "tickets", "ITS-002", "status"], "query": [{ "key": "value", "value": "READY_FOR_QA" }] } } }
+      ]
+    },
+    {
+      "name": "Bledy (Bug)",
+      "item": [
+        { "name": "GET wszystkie", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/bugs", "host": ["{{baseUrl}}"], "path": ["api", "bugs"] } } },
+        { "name": "GET filtr priority=CRITICAL", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/bugs?priority=CRITICAL", "host": ["{{baseUrl}}"], "path": ["api", "bugs"], "query": [{ "key": "priority", "value": "CRITICAL" }] } } },
+        { "name": "GET filtr source=SQA + sort", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/bugs?source=SQA&sort=priority", "host": ["{{baseUrl}}"], "path": ["api", "bugs"], "query": [{ "key": "source", "value": "SQA" }, { "key": "sort", "value": "priority" }] } } },
+        { "name": "GET po id", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/bugs/BUG-001", "host": ["{{baseUrl}}"], "path": ["api", "bugs", "BUG-001"] } } },
+        { "name": "POST zglos bug do zadania", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"bugId\": \"BUG-200\",\n  \"defectDescription\": \"Aplikacja zawiesza sie przy duzym pliku\",\n  \"priority\": \"HIGH\",\n  \"source\": \"SQA\"\n}" }, "url": { "raw": "{{baseUrl}}/api/tickets/ITS-003/bugs", "host": ["{{baseUrl}}"], "path": ["api", "tickets", "ITS-003", "bugs"] } } },
+        { "name": "PATCH zmien status buga", "request": { "method": "PATCH", "url": { "raw": "{{baseUrl}}/api/bugs/BUG-001/status?value=IN_PROGRESS", "host": ["{{baseUrl}}"], "path": ["api", "bugs", "BUG-001", "status"], "query": [{ "key": "value", "value": "IN_PROGRESS" }] } } }
+      ]
+    },
+    {
+      "name": "Buildy",
+      "item": [
+        { "name": "GET wszystkie", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/builds", "host": ["{{baseUrl}}"], "path": ["api", "builds"] } } },
+        { "name": "GET filtr staticAnalysisPassed=false", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/builds?staticAnalysisPassed=false", "host": ["{{baseUrl}}"], "path": ["api", "builds"], "query": [{ "key": "staticAnalysisPassed", "value": "false" }] } } },
+        { "name": "GET filtr cykl + sort daty", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/builds?cycleId=2&sort=compilationDate,desc", "host": ["{{baseUrl}}"], "path": ["api", "builds"], "query": [{ "key": "cycleId", "value": "2" }, { "key": "sort", "value": "compilationDate,desc" }] } } },
+        { "name": "POST zapis kodu (build)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"cycleId\": 2,\n  \"commitHash\": \"feedc0de\",\n  \"staticAnalysisPassed\": true\n}" }, "url": { "raw": "{{baseUrl}}/api/builds", "host": ["{{baseUrl}}"], "path": ["api", "builds"] } } }
+      ]
+    },
+    {
+      "name": "Release Notes",
+      "item": [
+        { "name": "GET wszystkie", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/release-notes", "host": ["{{baseUrl}}"], "path": ["api", "release-notes"] } } },
+        { "name": "GET filtr viewType=PRODUCTION", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/release-notes?viewType=PRODUCTION", "host": ["{{baseUrl}}"], "path": ["api", "release-notes"], "query": [{ "key": "viewType", "value": "PRODUCTION" }] } } },
+        { "name": "POST utworz notatki", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"buildId\": 1,\n  \"viewType\": \"PRODUCTION\",\n  \"textContent\": \"Wydanie v1.5.0 - SSO, szybsze raporty.\"\n}" }, "url": { "raw": "{{baseUrl}}/api/release-notes", "host": ["{{baseUrl}}"], "path": ["api", "release-notes"] } } },
+        { "name": "PUT aktualizuj notatki", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"viewType\": \"UAT\",\n  \"textContent\": \"Zaktualizowana tresc notatek dla UAT.\"\n}" }, "url": { "raw": "{{baseUrl}}/api/release-notes/1", "host": ["{{baseUrl}}"], "path": ["api", "release-notes", "1"] } } }
+      ]
+    },
+    {
+      "name": "Wdrozenia (Portal Klienta)",
+      "item": [
+        { "name": "GET wszystkie", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/deployments", "host": ["{{baseUrl}}"], "path": ["api", "deployments"] } } },
+        { "name": "GET filtr deploymentStatus=SUCCESS", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/deployments?deploymentStatus=SUCCESS", "host": ["{{baseUrl}}"], "path": ["api", "deployments"], "query": [{ "key": "deploymentStatus", "value": "SUCCESS" }] } } },
+        { "name": "GET filtr uatStatus=IN_PROGRESS", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/deployments?uatStatus=IN_PROGRESS", "host": ["{{baseUrl}}"], "path": ["api", "deployments"], "query": [{ "key": "uatStatus", "value": "IN_PROGRESS" }] } } },
+        { "name": "POST utworz wdrozenie", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"cycleId\": 3,\n  \"uatEnvironmentUrl\": \"https://uat.portal.example/v2.0.0\"\n}" }, "url": { "raw": "{{baseUrl}}/api/deployments", "host": ["{{baseUrl}}"], "path": ["api", "deployments"] } } },
+        { "name": "PATCH akceptacja terminu (uat-status)", "request": { "method": "PATCH", "url": { "raw": "{{baseUrl}}/api/deployments/2/uat-status?value=ACCEPTED", "host": ["{{baseUrl}}"], "path": ["api", "deployments", "2", "uat-status"], "query": [{ "key": "value", "value": "ACCEPTED" }] } } },
+        { "name": "PATCH status wdrozenia", "request": { "method": "PATCH", "url": { "raw": "{{baseUrl}}/api/deployments/2/deployment-status?value=STARTED", "host": ["{{baseUrl}}"], "path": ["api", "deployments", "2", "deployment-status"], "query": [{ "key": "value", "value": "STARTED" }] } } }
+      ]
+    },
+    {
+      "name": "Weryfikacje UAT",
+      "item": [
+        { "name": "GET wszystkie", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/uat-verifications", "host": ["{{baseUrl}}"], "path": ["api", "uat-verifications"] } } },
+        { "name": "GET filtr po wdrozeniu", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/uat-verifications?deploymentId=1", "host": ["{{baseUrl}}"], "path": ["api", "uat-verifications"], "query": [{ "key": "deploymentId", "value": "1" }] } } },
+        { "name": "POST rejestracja UAT (akceptacja)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"requirementsMet\": true,\n  \"noOperationalImpact\": true,\n  \"securityAuditPassed\": true\n}" }, "url": { "raw": "{{baseUrl}}/api/deployments/2/verifications", "host": ["{{baseUrl}}"], "path": ["api", "deployments", "2", "verifications"] } } },
+        { "name": "POST rejestracja UAT (odrzucenie)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"requirementsMet\": false,\n  \"noOperationalImpact\": true,\n  \"securityAuditPassed\": true,\n  \"rejectionJustification\": \"Brak wymaganego eksportu do PDF\"\n}" }, "url": { "raw": "{{baseUrl}}/api/deployments/2/verifications", "host": ["{{baseUrl}}"], "path": ["api", "deployments", "2", "verifications"] } } }
+      ]
+    }
+  ]
+}
